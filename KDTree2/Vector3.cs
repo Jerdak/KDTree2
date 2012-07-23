@@ -36,21 +36,54 @@ namespace KDTree2
 			Z = aZ;
 		}
 
+		/// <summary>
+		/// Return the Vector3 axis value at 'index'
+		/// </summary>
+		/// <param name="index">Index in to cell array.  0 = X, 1 = Y, 2 = Z</param>
+		/// <returns>Single value at axis[index]</returns>
 		public float Cell(int index) {
 			return cell_[index];
 		}
 
+		/// <summary>
+		/// Return the Vector3 axis value at 'axis
+		/// </summary>
+		/// <param name="axis">Axis enumeration</param>
+		/// <returns>Single value at axis[index]</returns>
+		public float Cell(Axis axis)
+		{
+			return Cell((int)axis);
+		}
+		/// <summary>
+		/// Distance from Vector3 to Vector3
+		/// </summary>
+		/// <returns>Distance</returns>
 		public float Distance(Vector3 right){
 			Vector3 tmp = right - this;
 			return tmp.Length();
 		}
+		
+		/// <summary>
+		/// Length (magnitude) of Vector3
+		/// </summary>
+		/// <returns></returns>
 		public float Length(){
 			return (float)Math.Sqrt(SqrLength());
 		}
+
+		/// <summary>
+		/// Squared length of Vector3.
+		/// </summary>
+		/// <returns></returns>
 		public float SqrLength()
 		{
 			return X * X + Y * Y + Z * Z;
 		}
+
+		/// <summary>
+		/// Get the largest axis 
+		/// </summary>
+		/// <returns>Largest enumerated axis</returns>
 		public Axis LargestAxis()
 		{
 			if (X > Y && Y > Z) { return Axis.X; }
@@ -58,6 +91,11 @@ namespace KDTree2
 			else { return Axis.Z; ; }
 		}
 		
+		/// <summary>
+		/// Get the largest axis and the value of that axis
+		/// </summary>
+		/// <param name="value">Value of the largest axis</param>
+		/// <returns>Largest enumerated axis</returns>
 		public Axis LargestAxis(out float value)
 		{
 			Axis return_axis = LargestAxis();
@@ -65,12 +103,22 @@ namespace KDTree2
 			return return_axis;
 		}
 
+		/// <summary>
+		/// Get the largest axis and the value of that axis
+		/// </summary>
+		/// <param name="value">Value of the largest axis</param>
+		/// <param name="axis"> Largest enumerated axis</param>
 		public void LargestAxis(out Axis axis, out float value)
 		{
 			axis = LargestAxis();
 			value = Cell((int)axis);
 		}
 		
+		/// <summary>
+		/// Find the maximum Vector3 of 2 vectors. Max value is compared along all axes 
+		/// </summary>
+		/// <example>Max((1,0,10),(2,0,0)) = (2,0,10)</example>
+		/// <returns>Max Vector3 across all axes</returns>
 		public static Vector3 Max(Vector3 left, Vector3 right) {
 			float x = (left.X > right.X) ? left.X : right.X;
 			float y = (left.Y > right.Y) ? left.Y : right.Y;
@@ -78,6 +126,12 @@ namespace KDTree2
 
 			return new Vector3(x, y, z);
 		}
+
+		/// <summary>
+		/// Find the maximum Vector3 of 2 vectors. Max value is compared along all axes 
+		/// </summary>
+		/// <example>Max((1,0,10),(2,0,0)) = (2,0,10)</example>
+		/// <returns>Max Vector3 across all axes</returns>
 		public Vector3 Max(Vector3 right)
 		{
 			float x = (X > right.X) ? X : right.X;
@@ -86,6 +140,12 @@ namespace KDTree2
 
 			return new Vector3(x, y, z);
 		}
+
+		/// <summary>
+		/// Find the minimum Vector3 of 2 vectors. Min value is compared along all axes 
+		/// </summary>
+		/// <example>Min((1,0,10),(2,0,0)) = (1,0,0)</example>
+		/// <returns>Min Vector3 across all axes</returns>
 		public static Vector3 Min(Vector3 left, Vector3 right)
 		{
 			float x = (left.X < right.X) ? left.X : right.X;
@@ -94,6 +154,12 @@ namespace KDTree2
 
 			return new Vector3(x, y, z);
 		}
+
+		/// <summary>
+		/// Find the minimum Vector3 of 2 vectors. Min value is compared along all axes 
+		/// </summary>
+		/// <example>Min((1,0,10),(2,0,0)) = (1,0,0)</example>
+		/// <returns>Min Vector3 across all axes</returns>
 		public Vector3 Min(Vector3 right)
 		{
 			float x = (X < right.X) ? X : right.X;
@@ -103,6 +169,10 @@ namespace KDTree2
 			return new Vector3(x, y, z);
 		}
 
+		/// <summary>
+		/// Find a series of metrics for the give Vector3 list.  
+		/// </summary>
+		/// <returns>TRUE if metrics were calculated, FALSE if not.</returns>
 		public static bool Metrics(List<Vector3> vertices, out Vector3 min, out Vector3 max, out Vector3 center, out Vector3 centroid, out Vector3 range){
 			{
 				min = new Vector3();
@@ -130,6 +200,9 @@ namespace KDTree2
 			return true;
 		}
 
+		/// <summary>
+		/// Convert Vector3 to readable string.
+		/// </summary>
 		public override string ToString(){
 			StringBuilder sb = new StringBuilder();
 			sb.Append(X);
