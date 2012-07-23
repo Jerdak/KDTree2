@@ -41,8 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AxisAlignedBoundingBox.cs" />
+    <Compile Include="BoundingSphere.cs" />
     <Compile Include="Color.cs" />
     <Compile Include="Face.cs" />
+    <Compile Include="IntersectionTypes.cs" />
     <Compile Include="KDTree.cs" />
     <Compile Include="KDTreeNode.cs" />
     <Compile Include="ObjIO.cs" />

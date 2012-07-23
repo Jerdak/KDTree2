@@ -7,7 +7,6 @@ namespace KDTree2
 {
 	public class KDTree
 	{
-
 		List<Vector3> vertices_ = new List<Vector3>();
 		public List<Vector3> Vertices { get{ return vertices_;} private set { vertices_ = value; } }
 
@@ -174,7 +173,7 @@ namespace KDTree2
 			return Vertices[min_index];
 		}
 		/// <summary>
-		/// 
+		/// Find closest point using an axis aligned search boundary
 		/// </summary>
 		/// <param name="node"></param>
 		/// <param name="point"></param>
@@ -197,6 +196,7 @@ namespace KDTree2
 			nearest_index = tmp_index;
 			
 			KDTreeNode far_child = near_child.Sibling;
+		
 			if(far_child.AABB.Intersects(search_bounds)){
 				Vector3 far_result = FindClosestPoint(far_child, vertex, search_bounds, ref tmp_index);
 				float far_distance = far_result.Distance(vertex);
@@ -207,12 +207,55 @@ namespace KDTree2
 			}
 			return ret;
 		}
-		
+
+		/// <summary>
+		/// Find closest point using a centered bounding sphere
+		/// </summary>
+		/// <param name="node"></param>
+		/// <param name="vertex"></param>
+		/// <param name="search_bounds"></param>
+		/// <param name="nearest_index"></param>
+		/// <returns></returns>
+		Vector3 FindClosestPoint(KDTreeNode node, Vector3 vertex, BoundingSphere search_bounds, ref int nearest_index)
+		{
+			int tmp_index = -1;
+			if (node.IsLeaf)
+			{
+				tmp_index = -1;
+				Vector3 result = GetClosestVertexFromIndices(node.Indices, vertex, ref tmp_index);
+				nearest_index = tmp_index;
+				return result;
+			}
+
+			tmp_index = -1;
+			KDTreeNode near_child = node.GetSplitNode(vertex);
+			Vector3 near_result = FindClosestPoint(near_child, vertex, search_bounds, ref tmp_index);
+			Vector3 ret = near_result;
+			float near_distance = near_result.Distance(vertex);
+			nearest_index = tmp_index;
+
+			KDTreeNode far_child = near_child.Sibling;
+
+			if (far_child.AABB.Intersects(search_bounds))
+			{
+				Vector3 far_result = FindClosestPoint(far_child, vertex, search_bounds, ref tmp_index);
+				float far_distance = far_result.Distance(vertex);
+				if (far_distance < near_distance)
+				{
+					nearest_index = tmp_index;
+					ret = far_result;
+				}
+			}
+			return ret;
+		}
+
 		/// <summary>
 		/// Find the closest matching vertex
 		/// </summary>
 		/// <param name="vertex">Vertex to find closest match.</param>
-		/// <returns>Closest(nearest) matching vertex</returns>
+		/// <param name="distance">Search distance.</param>
+		/// <param name="nearest_index">Index of matching vertex in the KDTree vertex array</param>
+		/// <returns>Nearest matching vertex</returns>
 		public Vector3 FindClosestPoint(Vector3 vertex, float distance, ref int nearest_index)
 		{
 			if(root_ == null){
@@ -224,6 +267,12 @@ namespace KDTree2
 			return FindClosestPoint(Root, vertex, search_bounds, ref nearest_index);
 		}
 
+		/// <summary>
+		/// FInd the closest matching point using a full For-loop search: O(n)
+		/// </summary>
+		/// <param name="vertex">Vertex to match</param>
+		/// <param name="nearest_index">Index of matching vertex in the KDTree vertex array</param>
+		/// <returns>Nearest matching vertex</returns>
 		public Vector3 FindClosestPointBrute(Vector3 vertex, ref int nearest_index){
 			float min_dist = 0.0f;
 			int min_index = -1;

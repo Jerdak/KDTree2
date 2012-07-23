@@ -31,42 +31,42 @@ namespace KDTree2
 		/// Child nodes
 		/// </summary>
 		KDTreeNode[] children_				= new KDTreeNode[2];				//Node children.
-		
-		Vector3.Axis split_axis_			= Vector3.Axis.X;
+			
 		/// <summary>
 		/// Axis across which the data are split.  
 		/// </summary>
 		public Vector3.Axis SplitAxis		{ get { return split_axis_; } set { split_axis_ = value; } }
+		Vector3.Axis split_axis_ = Vector3.Axis.X;
 		
-		AxisAlignedBoundingBox aabb_		= new AxisAlignedBoundingBox();
 		/// <summary>
 		/// Node axis aligned bounding box, bounds vertex data.
 		/// </summary>
 		public AxisAlignedBoundingBox AABB { get { if (!IsBuilt)Build(); return aabb_; } set { aabb_ = value; } }
+		AxisAlignedBoundingBox aabb_ = new AxisAlignedBoundingBox();
 		
-		Vector3 pivot_					= new Vector3();
 		/// <summary>
 		/// Node split pivot.  Will be the center of the data
 		/// </summary>
 		public Vector3 Pivot				{ get { return pivot_; } set { pivot_ = value; } }
-
-		KDTreeNode parent_					= null;
+		Vector3 pivot_ = new Vector3();
+		
 		/// <summary>
 		/// Node parent.
 		/// </summary>
 		public KDTreeNode Parent			{ get { return parent_; } set { parent_ = value; } }
-
-		KDTreeNode sibling_					= null;
+		KDTreeNode parent_ = null;
+		
 		/// <summary>
 		/// Node sibling.
 		/// </summary>
 		public KDTreeNode Sibling { get { return sibling_; } set { sibling_ = value; } }
+		KDTreeNode sibling_ = null;
 
-		List<int> indices_					= new List<int>();
 		/// <summary>
 		/// Buffered list of indexes.  Values stored here will index in to the KDTree.vertices List
 		/// </summary>
 		public List<int> Indices			{ get { return indices_; } private set { indices_ = value; }}
+		List<int> indices_ = new List<int>();
 
 		/// <summary>
 		/// Number of indices

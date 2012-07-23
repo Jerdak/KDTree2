@@ -49,7 +49,7 @@ namespace KDTree2
 		}
 		public float SqrLength()
 		{
-			return (float)Math.Sqrt(X * X + Y * Y + Z * Z);
+			return X * X + Y * Y + Z * Z;
 		}
 		public Axis LargestAxis()
 		{
