@@ -86,8 +86,12 @@ namespace KDTree2
 		/// <returns>Largest enumerated axis</returns>
 		public Axis LargestAxis()
 		{
-			if (X > Y && Y > Z) { return Axis.X; }
-			else if (Y > Z) { return Axis.Y; }
+			float aX = Math.Abs(X);
+			float aY = Math.Abs(Y);
+			float aZ = Math.Abs(Z);
+
+			if (aX > aY && aY > aZ) { return Axis.X; }
+			else if (aY > aZ) { return Axis.Y; }
 			else { return Axis.Z; ; }
 		}
 		

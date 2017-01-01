@@ -75,15 +75,30 @@ namespace KDTree_UnitTest
 			List<Vector3> vertices;
 			List<Face> faces;
 			List<Color> colors;
-			if (!ObjIO.Read(@"D:\Libraries\KDTree2\KDTree_UnitTest\bin\Debug\test.obj", out vertices, out colors, out faces))
+			if (!ObjIO.Read(@"..\..\..\SampleData\simple_model.obj", out vertices, out colors, out faces))
 			{
 				Console.WriteLine("Failed to find test.obj");
+				Assert.Fail("Failed to find test2.obj");
 			}
 
+
 			KDTree tree = new KDTree();
-			tree.AddPoints(vertices);
-			bool build_result = tree.Build();
-			Assert.IsTrue(build_result);
+			{	// Assert build runs without failure
+				tree.AddPoints(vertices);
+				bool build_result = tree.Build();
+				Assert.IsTrue(build_result);
+			}
+			{	// Verify that internally KDTree is working from the same vertices.
+				Assert.IsTrue(vertices.Count == tree.VertexCount);
+				for(int i = 0; i < vertices.Count; ++i){
+					if(vertices[i].Distance(tree.Vertices[i]) >= 0.0000001f){
+						Console.WriteLine("Original Vertices: " + vertices[i].ToString());
+						Console.WriteLine("KDTreees Vertices: " + tree.Vertices[i].ToString());
+						Assert.Fail("Mismatched vertex comparison on index: " + i.ToString());
+						
+					}
+				}
+			}
 		}
 
 		/// <summary>
@@ -93,14 +108,15 @@ namespace KDTree_UnitTest
 		public void FindClosestPointTest()
 		{
 			Console.WriteLine("Current Directory: " + System.IO.Directory.GetCurrentDirectory());
+
 			List<Vector3> vertices;
 			List<Face> faces;
 			List<Color> colors;
 			KDTree tree = new KDTree();
 			{	//Build KDTree from a Wavefront .obj file
-				if (!ObjIO.Read(@"D:\Libraries\KDTree2\KDTree_UnitTest\bin\Debug\test2.obj", out vertices, out colors, out faces))
+				if (!ObjIO.Read(@"..\..\..\SampleData\simple_model.obj", out vertices, out colors, out faces))
 				{
-					Assert.Fail("Failed to find test.obj");
+					Assert.Fail("Failed to find test2.obj");
 				}
 				tree.AddPoints(vertices);
 				bool build_result = tree.Build();
@@ -112,6 +128,7 @@ namespace KDTree_UnitTest
 				st.Start();
 
 				bool match_result = true;
+				
 				for (int i = 0; i < vertices.Count; i++)
 				{
 					int index = i;
