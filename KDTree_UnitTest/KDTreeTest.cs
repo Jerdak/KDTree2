@@ -95,7 +95,6 @@ namespace KDTree_UnitTest
 						Console.WriteLine("Original Vertices: " + vertices[i].ToString());
 						Console.WriteLine("KDTreees Vertices: " + tree.Vertices[i].ToString());
 						Assert.Fail("Mismatched vertex comparison on index: " + i.ToString());
-						
 					}
 				}
 			}
@@ -162,6 +161,7 @@ namespace KDTree_UnitTest
 					int closest_index2 = 0;
 					Vector3 vertex = new Vector3(x, y, z);
 					
+					// WARNING:  To validate the closest point algorithm we have to use a brute force method to find ground truth, this is **slow** for large meshes.
 					Vector3 closest_vertex = tree.FindClosestPoint(vertex, 1.1f, ref closest_index);
 					Vector3 closest_vertex2 = tree.FindClosestPointBrute(vertex, ref closest_index2);
 
